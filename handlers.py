@@ -3,7 +3,7 @@ import os
 from random import choice
 
 from db import db, get_or_create_user
-from utils import is_cat, main_keyboard, play_random_numbers
+from utils import main_keyboard, play_random_numbers, has_object_on_image
 
 def greet_user(update, context):
     user = get_or_create_user(db, update.effective_user, update.message.chat.id)
@@ -53,7 +53,7 @@ def check_user_photo(update, context):
     user_photo = context.bot.getFile(update.message.photo[-1].file_id)
     file_name = os.path.join("downloads", f"{user_photo.file_id}.jpg")
     user_photo.download(file_name)
-    if is_cat(file_name):
+    if has_object_on_image(file_name, 'cat'):
         update.message.reply_text("Обнаружен котик, добавляю в библиотеку")
         new_filename = os.path.join("images", f"cat_{user_photo.file_id}.jpg")
         os.rename(file_name, new_filename)
